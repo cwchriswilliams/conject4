@@ -13,6 +13,10 @@
   (get (get (vec (reverse board)) y-pos) x-pos)
   )
 
+(defn is-piece-in-position? [board x-pos y-pos piece]
+  (= (get-piece-in-position board x-pos y-pos) piece)
+  )
+
 (defn is-position-valid? [board x-pos]
   (not
     (or

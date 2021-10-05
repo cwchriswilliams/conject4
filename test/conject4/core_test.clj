@@ -55,6 +55,16 @@
   (is (= (sut/get-piece-in-position test-board-with-yellow-row 2 2) :yellow))
   )
 
+(deftest test-is-piece-in-position
+  "returns true if expected piece in position"
+  (is (true? (sut/is-piece-in-position? test-board-with-red-row 0 1 :empty)))
+  (is (true? (sut/is-piece-in-position? test-board-with-red-row 0 3 :red)))
+  (is (true? (sut/is-piece-in-position? test-board-with-yellow-row 3 2 :yellow)))
+  "returns false if expected piece not in position"
+  (is (false? (sut/is-piece-in-position? test-board-with-red-row 0 3 :empty)))
+  (is (false? (sut/is-piece-in-position? test-board-with-red-row 0 1 :red)))
+  (is (false? (sut/is-piece-in-position? test-board-with-yellow-row 3 1 :yellow)))
+  )
 
 (deftest test-is-position-valid?
   "is-position-valid? returns false for negative numbers"
