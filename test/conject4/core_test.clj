@@ -91,6 +91,25 @@
   (is (false? (sut/is-position-valid? test-board-with-yellow-column 2)))
   )
 
+(deftest test-place-counter
+  "places in the location specified"
+  (is (= (sut/place-counter test-board 1 1 :red) [[:empty :empty :empty :empty]
+                                                  [:empty :red :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]]))
+  (is (= (sut/place-counter test-board 1 1 :yellow) [[:empty :empty :empty :empty]
+                                                  [:empty :yellow :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]]))
+  (is (= (sut/place-counter test-board 1 1 :empty) [[:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]
+                                                  [:empty :empty :empty :empty]]))
+  )
+
 (deftest test-apply-move
   "apply-move returns map with is-valid set to false if move is not valid"
   "apply-move returns map with board set to input board if move is not valid"

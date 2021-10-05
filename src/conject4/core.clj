@@ -30,8 +30,8 @@
     )
   )
 
-(defn place-counter [board x-pos y-pos]
-  (assoc board y-pos (assoc (get board x-pos) x-pos :red))
+(defn place-counter [board x-pos y-pos counter-colour]
+  (assoc board y-pos (assoc (get board x-pos) x-pos counter-colour))
   )
 
 (defn apply-move [board x-pos]
