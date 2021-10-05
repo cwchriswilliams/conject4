@@ -9,6 +9,10 @@
 (defn create-empty-board [x-size y-size]
   (vec (repeat y-size (vec (repeat x-size :empty)))))
 
+(defn get-piece-in-position [board x-pos y-pos]
+  (get (get (vec (reverse board)) y-pos) x-pos)
+  )
+
 (defn is-position-valid? [board x-pos]
   (not
     (or

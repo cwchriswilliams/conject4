@@ -30,6 +30,32 @@
                                   [:empty :empty :yellow :empty]
                                   [:empty :empty :yellow :empty]])
 
+(def test-board-with-red-row [[:empty :empty :empty :empty]
+                 [:red :red :red :red]
+                 [:empty :empty :empty :empty]
+                 [:empty :empty :empty :empty]
+                 [:empty :empty :empty :empty]])
+
+(def test-board-with-yellow-row [[:empty :empty :empty :empty]
+                 [:empty :empty :empty :empty]
+                 [:yellow :yellow :yellow :yellow]
+                 [:empty :empty :empty :empty]
+                 [:empty :empty :empty :empty]])
+
+(deftest test-get-piece-in-position
+  "returns empty if space is empty"
+  (is (= (sut/get-piece-in-position test-board-with-red-column 2 2) :empty))
+  (is (= (sut/get-piece-in-position test-board-with-yellow-column 1 2) :empty))
+  (is (= (sut/get-piece-in-position test-board-with-red-row 2 2) :empty))
+  (is (= (sut/get-piece-in-position test-board-with-yellow-row 0 0) :empty))
+  "returns correct contents of space if space is not empty"
+  (is (= (sut/get-piece-in-position test-board-with-red-column 1 2) :red))
+  (is (= (sut/get-piece-in-position test-board-with-yellow-column 2 2) :yellow))
+  (is (= (sut/get-piece-in-position test-board-with-red-row 2 3) :red))
+  (is (= (sut/get-piece-in-position test-board-with-yellow-row 2 2) :yellow))
+  )
+
+
 (deftest test-is-position-valid?
   "is-position-valid? returns false for negative numbers"
   (is (false? (sut/is-position-valid? test-board -1)))
