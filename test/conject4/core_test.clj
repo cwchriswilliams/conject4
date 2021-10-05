@@ -93,17 +93,17 @@
 
 (deftest test-place-counter
   "places in the location specified"
-  (is (= (sut/place-counter test-board 1 1 :red) [[:empty :empty :empty :empty]
+  (is (= (sut/place-counter test-board 1 3 :red) [[:empty :empty :empty :empty]
                                                   [:empty :red :empty :empty]
                                                   [:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]]))
-  (is (= (sut/place-counter test-board 1 1 :yellow) [[:empty :empty :empty :empty]
+  (is (= (sut/place-counter test-board 1 3 :yellow) [[:empty :empty :empty :empty]
                                                   [:empty :yellow :empty :empty]
                                                   [:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]]))
-  (is (= (sut/place-counter test-board 1 1 :empty) [[:empty :empty :empty :empty]
+  (is (= (sut/place-counter test-board 1 3 :empty) [[:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]
                                                   [:empty :empty :empty :empty]
@@ -112,9 +112,33 @@
 
 (deftest test-apply-move
   "apply-move returns map with is-valid set to false if move is not valid"
+  (is (false? (:is-valid-move (sut/apply-move test-board -1 :red))))
   "apply-move returns map with board set to input board if move is not valid"
-  (is (= (:board (sut/apply-move test-board -1)) test-board))
-  (is (false? (:is-valid-move (sut/apply-move test-board -1))))
+  (is (= (:board (sut/apply-move test-board -1 :red)) test-board))
   "apply-move returns map with is-valid set to true if move is valid"
-  (is (true? (:is-valid-move (sut/apply-move test-board 3))))
+  (is (true? (:is-valid-move (sut/apply-move test-board 3 :red))))
+  "apply-move returns map with board set to correct value if move is valid"
+  (is (= (:board (sut/apply-move test-board 1 :red)) [[:empty :empty :empty :empty]
+                                                      [:empty :empty :empty :empty]
+                                                      [:empty :empty :empty :empty]
+                                                      [:empty :empty :empty :empty]
+                                                      [:empty :red :empty :empty]]))
+  (is (= (:board (sut/apply-move [[:empty :empty :empty :empty]
+                                  [:empty :empty :empty :empty]
+                                  [:empty :empty :empty :empty]
+                                  [:empty :empty :empty :empty]
+                                  [:empty :red :empty :empty]] 1 :red)) [[:empty :empty :empty :empty]
+                                                                         [:empty :empty :empty :empty]
+                                                                         [:empty :empty :empty :empty]
+                                                                         [:empty :red :empty :empty]
+                                                                         [:empty :red :empty :empty]]))
+  (is (= (:board (sut/apply-move [[:empty :empty :empty :empty]
+                                  [:empty :empty :empty :empty]
+                                  [:empty :empty :empty :empty]
+                                  [:empty :red :empty :empty]
+                                  [:empty :red :empty :empty]] 1 :yellow)) [[:empty :empty :empty :empty]
+                                                                            [:empty :empty :empty :empty]
+                                                                            [:empty :yellow :empty :empty]
+                                                                            [:empty :red :empty :empty]
+                                                                            [:empty :red :empty :empty]]))
   )
