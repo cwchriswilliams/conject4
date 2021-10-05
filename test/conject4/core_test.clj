@@ -66,6 +66,14 @@
   (is (false? (sut/is-piece-in-position? test-board-with-yellow-row 3 1 :yellow)))
   )
 
+(deftest test-is-position-empty?
+  "returns true if position is empty"
+  (is (true? (sut/is-position-empty? test-board-with-red-row 0 1)))
+  "returns false if position is not empty"
+  (is (false? (sut/is-position-empty? test-board-with-red-row 0 3)))
+  (is (false? (sut/is-position-empty? test-board-with-yellow-row 3 2)))
+  )
+
 (deftest test-is-position-valid?
   "is-position-valid? returns false for negative numbers"
   (is (false? (sut/is-position-valid? test-board -1)))

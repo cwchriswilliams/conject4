@@ -17,6 +17,9 @@
   (= (get-piece-in-position board x-pos y-pos) piece)
   )
 
+(defn is-position-empty? [board x-pos y-pos]
+  (is-piece-in-position? board x-pos y-pos :empty))
+
 (defn is-position-valid? [board x-pos]
   (not
     (or
