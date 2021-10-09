@@ -106,6 +106,19 @@
   (is (= (sut/place-counter test-4x3-laid-board 4 0 :empty) {:width 4 :height 3 :board {0 :red 8 :red}}))
   )
 
+(sut/get-lowest-empty-in-column {:width 1 :height 5 :board {}} 0)
+
+(deftest get-lowest-empty-in-column
+  "Returns 0 for empty column"
+  (is (= (sut/get-lowest-empty-in-column test-4x3-laid-board 1) 0))
+  "throws for filled column"
+  ;(is (thrown? Exception (sut/get-lowest-empty-in-column test-4x3-laid-board 1)))
+  "Returns expected value for various columns"
+  (is (= (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red}} 0) 1))
+  (is (= (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow}} 0) 2))
+  (is (= (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow 2 :red}} 0) 3))
+  )
+
 (deftest test-apply-move
   "apply-move returns map with is-valid set to false if move is not valid"
   (is (false? (:is-valid-move (sut/apply-move test-4x3-laid-board -1 :red))))
