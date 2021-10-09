@@ -70,23 +70,11 @@
           board
           (map vector x-positions (next-counter start-counter))))
 
-(defn print-board [board]
-  (loop [board board
-         current-idx 0
-         printable-board []
-         board-width (get-board-width board)
-         max-idx (* (get-board-height board) board-width)]
-    (if (= current-idx max-idx)
-      (vec (reverse printable-board))
-      (if (= (mod current-idx board-width) 0)
-        (recur board
-               (inc current-idx)
-               (conj printable-board [(get (:board board) current-idx :empty)])
-               board-width
-               max-idx)
-        (recur board
-               (inc current-idx)
-               (update printable-board (- (count printable-board) 1) #(conj % (get (:board board) current-idx :empty)))
-               board-width
-               max-idx))))
+(defn print-board [{:keys [width height] :as full-board}]
+  (reverse
+    (map
+      (fn [y-pos] (map
+                    (fn [x-pos] (get-piece-in-position full-board x-pos y-pos))
+                    (range width)))
+      (range height)))
   )
