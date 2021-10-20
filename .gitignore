@@ -12,3 +12,6 @@ pom.xml.asc
 .hgignore
 .hg/
 .idea
+.cpcache
+clojure-tools.zip
+.rebel_readline_history

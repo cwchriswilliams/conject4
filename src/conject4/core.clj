@@ -70,6 +70,10 @@
           board
           (map vector x-positions (next-counter start-counter))))
 
+(defn find-valid-moves [board]
+  (filter #(is-position-valid? board %) (range (get-board-width board)))
+  )
+
 (defn print-board [{:keys [width height] :as full-board}]
   (reverse
     (map

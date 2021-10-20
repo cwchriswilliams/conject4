@@ -129,3 +129,19 @@
   "apply move returns map with board set to the updated board if move is valid"
   (is (= (:board (sut/apply-move test-4x3-laid-board 1 :red)) {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red}}))
   )
+
+(deftest test-find-valid-moves
+  "Returns empty col when there are no valid moves"
+  (is (empty? (sut/find-valid-moves {:width 1 :height 1 :board {0 :red}})))
+  (is (empty? (sut/find-valid-moves {:width 2 :height 1 :board {0 :red 1 :red}})))
+
+  "Returns only valid move if only one move available"
+  (is (= [0] (sut/find-valid-moves {:width 1 :height 1 :board {}})))
+  (is (= [0] (sut/find-valid-moves {:width 2 :height 1 :board {1 :red}})))
+  (is (= [1] (sut/find-valid-moves {:width 2 :height 1 :board {0 :red}})))
+  
+  "Returns multiple valid moves if multiple moves available"
+  (is (= [0 1] (sut/find-valid-moves {:width 2 :height 1 :board {}})))
+  (is (= [0 1 2] (sut/find-valid-moves {:width 3 :height 1 :board {}})))
+  (is (= [1 2] (sut/find-valid-moves {:width 3 :height 1 :board {0 :red}})))
+)
