@@ -11,35 +11,35 @@
 
 (deftest test-board-creation
   "default num board is empty regardless of size"
-  (is (= (sut/create-empty-board 1 1) {:width 1 :height 1 :board {}}))
-  (is (= (sut/create-empty-board 1 2) {:width 1 :height 2 :board {}}))
-  (is (= (sut/create-empty-board 1 3) {:width 1 :height 3 :board {}}))
-  (is (= (sut/create-empty-board 2 1) {:width 2 :height 1 :board {}}))
-  (is (= (sut/create-empty-board 3 1) {:width 3 :height 1 :board {}}))
-  (is (= (sut/create-empty-board 2 2) {:width 2 :height 2 :board {}}))
+  (is (= {:width 1 :height 1 :board {}} (sut/create-empty-board 1 1)))
+  (is (= {:width 1 :height 2 :board {}} (sut/create-empty-board 1 2)))
+  (is (= {:width 1 :height 3 :board {}} (sut/create-empty-board 1 3)))
+  (is (= {:width 2 :height 1 :board {}} (sut/create-empty-board 2 1)))
+  (is (= {:width 3 :height 1 :board {}} (sut/create-empty-board 3 1)))
+  (is (= {:width 2 :height 2 :board {}} (sut/create-empty-board 2 2)))
   )
 
 (deftest print-board
   "Prints board as expected"
-  (is (= (sut/print-board {:height 2 :width 4 :board {}}) [[:empty :empty :empty :empty]
-                                                               [:empty :empty :empty :empty]]))
-  (is (= (sut/print-board {:height 2 :width 4 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow}}) [[:empty :red :yellow :yellow]
-                                                                                                          [:red :empty :yellow :empty]]))
+  (is (= [[:empty :empty :empty :empty]
+          [:empty :empty :empty :empty]] (sut/print-board {:height 2 :width 4 :board {}})))
+  (is (= [[:empty :red :yellow :yellow]
+          [:red :empty :yellow :empty]] (sut/print-board {:height 2 :width 4 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow}})))
   )
 
 (deftest test-get-piece-in-position
   "returns empty if space is empty"
-  (is (= (sut/get-piece-in-position test-6x5-empty-board 2 2) :empty))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 1 2) :empty))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 2 2) :empty))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 1 0) :empty))
+  (is (= :empty (sut/get-piece-in-position test-6x5-empty-board 2 2)))
+  (is (= :empty (sut/get-piece-in-position test-6x5-laid-board 1 2)))
+  (is (= :empty (sut/get-piece-in-position test-6x5-laid-board 2 2)))
+  (is (= :empty (sut/get-piece-in-position test-6x5-laid-board 1 0)))
   "returns correct contents of space if space is not empty"
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 0 0) :red))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 2 0) :yellow))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 5 0) :red))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 0 1) :yellow))
-  (is (= (sut/get-piece-in-position test-6x5-laid-board 1 1) :yellow))
-  (is (= (sut/get-piece-in-position test-4x5-laid-board 3 1) :yellow))
+  (is (= :red (sut/get-piece-in-position test-6x5-laid-board 0 0)))
+  (is (= :yellow (sut/get-piece-in-position test-6x5-laid-board 2 0)))
+  (is (= :red (sut/get-piece-in-position test-6x5-laid-board 5 0)))
+  (is (= :yellow (sut/get-piece-in-position test-6x5-laid-board 0 1)))
+  (is (= :yellow (sut/get-piece-in-position test-6x5-laid-board 1 1)))
+  (is (= :yellow (sut/get-piece-in-position test-4x5-laid-board 3 1)))
   )
 
 
@@ -92,53 +92,53 @@
 
 (deftest test-place-counter
   "Places in the location specified on empty board"
-  (is (= (sut/place-counter test-6x5-empty-board 0 0 :red) {:width 6 :height 5 :board {0 :red}}))
-  (is (= (sut/place-counter test-6x5-empty-board 1 0 :yellow) {:width 6 :height 5 :board {1 :yellow}}))
-  (is (= (sut/place-counter test-6x5-empty-board 0 1 :yellow) {:width 6 :height 5 :board {6 :yellow}}))
+  (is (= {:width 6 :height 5 :board {0 :red}} (sut/place-counter test-6x5-empty-board 0 0 :red)))
+  (is (= {:width 6 :height 5 :board {1 :yellow}} (sut/place-counter test-6x5-empty-board 1 0 :yellow)))
+  (is (= {:width 6 :height 5 :board {6 :yellow}} (sut/place-counter test-6x5-empty-board 0 1 :yellow)))
   "Places in the location specified on non-empty board"
-  (is (= (sut/place-counter test-4x3-laid-board 1 1 :yellow) {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red 5 :yellow}}))
-  (is (= (sut/place-counter test-4x3-laid-board 2 1 :yellow) {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red 6 :yellow}}))
+  (is (= {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red 5 :yellow}} (sut/place-counter test-4x3-laid-board 1 1 :yellow)))
+  (is (= {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red 6 :yellow}} (sut/place-counter test-4x3-laid-board 2 1 :yellow)))
   "Replaces the piece in position"
-  (is (= (sut/place-counter test-4x3-laid-board 0 0 :yellow) {:width 4 :height 3 :board {0 :yellow 4 :yellow 8 :red}}))
-  (is (= (sut/place-counter test-4x3-laid-board 4 0 :red) {:width 4 :height 3 :board {0 :red 4 :red 8 :red}}))
+  (is (= {:width 4 :height 3 :board {0 :yellow 4 :yellow 8 :red}} (sut/place-counter test-4x3-laid-board 0 0 :yellow)))
+  (is (= {:width 4 :height 3 :board {0 :red 4 :red 8 :red}} (sut/place-counter test-4x3-laid-board 4 0 :red)))
   "Removes the piece if empty selected"
-  (is (= (sut/place-counter test-4x3-laid-board 0 0 :empty) {:width 4 :height 3 :board {4 :yellow 8 :red}}))
-  (is (= (sut/place-counter test-4x3-laid-board 4 0 :empty) {:width 4 :height 3 :board {0 :red 8 :red}}))
+  (is (= {:width 4 :height 3 :board {4 :yellow 8 :red}} (sut/place-counter test-4x3-laid-board 0 0 :empty)))
+  (is (= {:width 4 :height 3 :board {0 :red 8 :red}} (sut/place-counter test-4x3-laid-board 4 0 :empty)))
   )
-
-(sut/get-lowest-empty-in-column {:width 1 :height 5 :board {}} 0)
 
 (deftest get-lowest-empty-in-column
   "Returns 0 for empty column"
-  (is (= (sut/get-lowest-empty-in-column test-4x3-laid-board 1) 0))
+  (is (= 0 (sut/get-lowest-empty-in-column test-4x3-laid-board 1)))
   "throws for filled column"
   ;(is (thrown? Exception (sut/get-lowest-empty-in-column test-4x3-laid-board 1)))
   "Returns expected value for various columns"
-  (is (= (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red}} 0) 1))
-  (is (= (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow}} 0) 2))
-  (is (= (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow 2 :red}} 0) 3))
+  (is (= 1 (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red}} 0)))
+  (is (= 2 (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow}} 0)))
+  (is (= 3 (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow 2 :red}} 0)))
   )
 
 (deftest test-apply-move
   "apply-move returns map with is-valid set to false if move is not valid"
   (is (false? (:is-valid-move (sut/apply-move test-4x3-laid-board -1 :red))))
   "apply-move returns map with board set to input board if move is not valid"
-  (is (= (:board (sut/apply-move test-4x3-laid-board -1 :red)) test-4x3-laid-board))
+  (is (= test-4x3-laid-board (:board (sut/apply-move test-4x3-laid-board -1 :red))))
   "apply-move returns map with is-valid set to true if move is valid"
   (is (true? (:is-valid-move (sut/apply-move test-4x3-laid-board 1 :red))))
   "apply move returns map with board set to the updated board if move is valid"
-  (is (= (:board (sut/apply-move test-4x3-laid-board 1 :red)) {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red}}))
+  (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red}} (:board (sut/apply-move test-4x3-laid-board 1 :red))))
   )
 
 (deftest test-find-valid-moves
   "Returns empty col when there are no valid moves"
   (is (empty? (sut/find-valid-moves {:width 1 :height 1 :board {0 :red}})))
   (is (empty? (sut/find-valid-moves {:width 2 :height 1 :board {0 :red 1 :red}})))
+  (is (empty? (sut/find-valid-moves {:width 1 :height 2 :board {0 :red 1 :red}})))
 
   "Returns only valid move if only one move available"
   (is (= [0] (sut/find-valid-moves {:width 1 :height 1 :board {}})))
   (is (= [0] (sut/find-valid-moves {:width 2 :height 1 :board {1 :red}})))
   (is (= [1] (sut/find-valid-moves {:width 2 :height 1 :board {0 :red}})))
+  (is (= [0] (sut/find-valid-moves {:width 1 :height 2 :board {0 :red}})))
   
   "Returns multiple valid moves if multiple moves available"
   (is (= [0 1] (sut/find-valid-moves {:width 2 :height 1 :board {}})))
