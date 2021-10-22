@@ -56,17 +56,21 @@
 (defn place-counter-in-column [board x-pos counter-colour]
   (place-counter board x-pos (get-lowest-empty-in-column board x-pos) counter-colour))
 
-(defn apply-move [board x-pos counter-colour]
+(defn apply-move
+  ([board x-pos counter-colour]
   (if (is-position-valid? board x-pos)
     {:board (place-counter-in-column board x-pos counter-colour) :is-valid-move true}
     {:board board :is-valid-move false}
     ))
+  ([board [x-pos counter-colour]]
+   (apply-move board x-pos counter-colour))
+  )
 
 (defn next-counter [starts-with]
   (lazy-seq (cycle [starts-with (if (= starts-with :red) :yellow :red)])))
 
 (defn apply-moves [board x-positions start-counter]
-  (reduce #(:board (apply-move %1 (first %2) (second %2)))
+  (reduce #(:board (apply-move %1 %2))
           board
           (map vector x-positions (next-counter start-counter))))
 

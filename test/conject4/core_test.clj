@@ -126,6 +126,8 @@
   (is (true? (:is-valid-move (sut/apply-move test-4x3-laid-board 1 :red))))
   "apply move returns map with board set to the updated board if move is valid"
   (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red}} (:board (sut/apply-move test-4x3-laid-board 1 :red))))
+  "apply move can take pair of position and colour"
+  (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red}} (:board (sut/apply-move test-4x3-laid-board [1 :red]))))
   )
 
 (deftest test-next-counter
