@@ -128,20 +128,48 @@
   (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red}} (:board (sut/apply-move test-4x3-laid-board 1 :red))))
   )
 
+(deftest test-next-counter
+  "Next counter returns infinite sequence of alternating :red :yellow counters"
+  (is (= [:yellow] (take 1 (sut/next-counter :yellow))))
+  (is (= [:red] (take 1 (sut/next-counter :red))))
+  (is (= [:yellow :red] (take 2 (sut/next-counter :yellow))))
+  (is (= [:red :yellow] (take 2 (sut/next-counter :red))))
+  (is (= [:red :yellow :red :yellow] (take 4 (sut/next-counter :red))))
+  )
+
+(deftest test-apply-moves
+  "apply-moves returns input board when no moves provided"
+  (is (= test-4x3-laid-board (sut/apply-moves test-4x3-laid-board [] :yellow)))
+  "apply-moves will apply the provided counter first"
+  (is (= {:width 6 :height 5 :board {2 :yellow}} (sut/apply-moves test-6x5-empty-board [2] :yellow)))
+  (is (= {:width 6 :height 5 :board {2 :red}} (sut/apply-moves test-6x5-empty-board [2] :red)))
+  "apply-moves will apply the moves flipping counter each turn"
+  (is (= {:width 6 :height 5 :board {2 :yellow 3 :red}} (sut/apply-moves test-6x5-empty-board [2 3] :yellow)))
+  (is (= {:width 6 :height 5 :board {2 :red 3 :yellow}} (sut/apply-moves test-6x5-empty-board [2 3] :red)))
+  (is (= {:width 6 :height 5 :board {1 :yellow 2 :red}} (sut/apply-moves test-6x5-empty-board [2 1] :red)))
+  (is (= {:width 6 :height 5 :board {1 :yellow 7 :red}} (sut/apply-moves test-6x5-empty-board [1 1] :yellow)))
+  (is (= {:width 6 :height 5 :board {1 :red 7 :yellow}} (sut/apply-moves test-6x5-empty-board [1 1] :red)))
+  (is (= {:width 6 :height 5 :board {1 :red 7 :yellow 13 :red}} (sut/apply-moves test-6x5-empty-board [1 1 1] :red)))
+  )
+
 (deftest test-find-valid-moves
   "Returns empty col when there are no valid moves"
   (is (empty? (sut/find-valid-moves {:width 1 :height 1 :board {0 :red}})))
   (is (empty? (sut/find-valid-moves {:width 2 :height 1 :board {0 :red 1 :red}})))
   (is (empty? (sut/find-valid-moves {:width 1 :height 2 :board {0 :red 1 :red}})))
+  (is (empty? (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red 2 :red 3 :red}})))
 
   "Returns only valid move if only one move available"
   (is (= [0] (sut/find-valid-moves {:width 1 :height 1 :board {}})))
   (is (= [0] (sut/find-valid-moves {:width 2 :height 1 :board {1 :red}})))
   (is (= [1] (sut/find-valid-moves {:width 2 :height 1 :board {0 :red}})))
   (is (= [0] (sut/find-valid-moves {:width 1 :height 2 :board {0 :red}})))
+  (is (= [0] (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red 3 :red}})))
+  (is (= [1] (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red 2 :red}})))
   
   "Returns multiple valid moves if multiple moves available"
   (is (= [0 1] (sut/find-valid-moves {:width 2 :height 1 :board {}})))
   (is (= [0 1 2] (sut/find-valid-moves {:width 3 :height 1 :board {}})))
   (is (= [1 2] (sut/find-valid-moves {:width 3 :height 1 :board {0 :red}})))
+  (is (= [0 1] (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red}})))
 )
