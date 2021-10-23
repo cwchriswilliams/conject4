@@ -108,7 +108,7 @@
 
 (deftest get-lowest-empty-in-column
   "Returns 0 for empty column"
-  (is (= 0 (sut/get-lowest-empty-in-column test-4x3-laid-board 1)))
+  (is (zero? (sut/get-lowest-empty-in-column test-4x3-laid-board 1)))
   "throws for filled column"
   ;(is (thrown? Exception (sut/get-lowest-empty-in-column test-4x3-laid-board 1)))
   "Returns expected value for various columns"

@@ -16,3 +16,4 @@ pom.xml.asc
 clojure-tools.zip
 .rebel_readline_history
 ./~
+.eastwood
