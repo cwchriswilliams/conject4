@@ -69,7 +69,7 @@
   [board x-pos y-pos piece]
   (= (get-piece-in-position board x-pos y-pos) piece))
 
-(defn is-position-empty? [board x-pos y-pos]
+(defn is-position-empty? 
   "Returns a value indicating whether the provided position is empty
   Arguments:
     - A game board
@@ -77,6 +77,7 @@
     - A target y position
   Returns:
     - true or false"
+  [board x-pos y-pos]
   (is-piece-in-position? board x-pos y-pos :empty))
 
 (def is-position-filled?
