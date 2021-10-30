@@ -14,7 +14,7 @@
   Returns:
     - A map containing the attributes [width, height board]"
   [x-size y-size]
-  {:height y-size :width x-size :board {}})
+  {:height y-size :width x-size :board {} :game-log []})
 
 (defn get-board-height 
   "Gets the height of the provided board
@@ -105,6 +105,12 @@
     )
   )
 
+(defn update-move-list
+  [board new-column-position]
+  (update board :game-log conj new-column-position))
+
+(reduce #(update-move-list %1 %2) (create-empty-board 3 3) [1 2 3 4 5])
+
 (defn place-counter
   "Places the specified counter colour in the specified position (ignoring validating position)
   Arguments:
@@ -142,7 +148,10 @@
   Returns:
     - A new game board with the specified piece placed (or removed for :empty)"
     [board x-pos counter-colour]
-  (place-counter board x-pos (get-lowest-empty-in-column board x-pos) counter-colour))
+  (-> 
+   (place-counter board x-pos (get-lowest-empty-in-column board x-pos) counter-colour)
+   (update-move-list x-pos)
+  ))
 
 (defn apply-move
   ([board x-pos counter-colour]
