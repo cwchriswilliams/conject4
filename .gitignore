@@ -17,3 +17,5 @@ clojure-tools.zip
 .rebel_readline_history
 ./~
 .eastwood
+.lsp
+.clj-kondo
