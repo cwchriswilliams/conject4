@@ -7,7 +7,7 @@
 (def test-4x5-laid-game  {:width 4 :height 5 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow} :game-log []})
 (def test-4x3-laid-game  {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red} :game-log []})
 
-(sut/print-board test-4x3-laid-game)
+(sut/get-board-layout test-4x3-laid-game)
 
 (deftest test-board-creation
   (testing "default game is empty regardless of size"
@@ -20,12 +20,12 @@
   )
   )
 
-(deftest print-board
+(deftest test-get-board-layout
   (testing "Prints board as expected"
     (is (= [[:empty :empty :empty :empty]
-            [:empty :empty :empty :empty]] (sut/print-board {:height 2 :width 4 :board {}})))
+            [:empty :empty :empty :empty]] (sut/get-board-layout {:height 2 :width 4 :board {}})))
     (is (= [[:empty :red :yellow :yellow]
-            [:red :empty :yellow :empty]] (sut/print-board {:height 2 :width 4 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow}})))
+            [:red :empty :yellow :empty]] (sut/get-board-layout {:height 2 :width 4 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow}})))
   )
 )
 
@@ -156,13 +156,13 @@
 
 (deftest test-apply-move
   (testing "apply-move returns map with is-valid set to false if move is not valid"
-    (is (false? (:is-valid-move (sut/apply-move test-4x3-laid-game -1 :red))))
+    (is (false? (:is-valid-move? (sut/apply-move test-4x3-laid-game -1 :red))))
   )
   (testing "apply-move returns map with board set to input board if move is not valid"
     (is (= test-4x3-laid-game (:board (sut/apply-move test-4x3-laid-game -1 :red))))
   )
   (testing "apply-move returns map with is-valid set to true if move is valid"
-    (is (true? (:is-valid-move (sut/apply-move test-4x3-laid-game 1 :red))))
+    (is (true? (:is-valid-move? (sut/apply-move test-4x3-laid-game 1 :red))))
   )
   (testing "apply move returns map with board set to the updated board if move is valid"
     (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red} :game-log [1]} (:board (sut/apply-move test-4x3-laid-game 1 :red))))

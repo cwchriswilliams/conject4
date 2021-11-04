@@ -106,10 +106,14 @@
   )
 
 (defn update-move-list
+  "Returns a game with the game log updated with the provided move
+  Arguments:
+    - A game
+    - A target x column
+  Returns:
+    - A game with the game log updated with the provided move"
   [game new-column-position]
   (update game :game-log conj new-column-position))
-
-(reduce #(update-move-list %1 %2) (create-empty-game 3 3) [1 2 3 4 5])
 
 (defn place-counter
   "Places the specified counter colour in the specified position (ignoring validating position)
@@ -154,28 +158,64 @@
   ))
 
 (defn apply-move
+  "Places a counter in the specified column or returns with is-valid-move? set to false
+  Arguments:
+    - A game
+    - A target x column
+    - A keyword representing the piece to place. One of [:empty :red :yellow]
+  Arguments:
+    - A game
+    - A pair of x column and counter-colour  
+  Returns:
+    - A new game board with the specified piece placed (or removed for :empty)"
   ([game x-pos counter-colour]
   (if (is-position-valid? game x-pos)
-    {:board (place-counter-in-column game x-pos counter-colour) :is-valid-move true}
-    {:board game :is-valid-move false}
+    {:board (place-counter-in-column game x-pos counter-colour) :is-valid-move? true}
+    {:board game :is-valid-move? false}
     ))
   ([game [x-pos counter-colour]]
    (apply-move game x-pos counter-colour))
   )
 
-(defn next-counter [starts-with]
-  (lazy-seq (cycle [starts-with (if (= starts-with :red) :yellow :red)])))
+(defn next-counter
+  "Gets an infinite sequence of alternating counters
+  Arguments:
+    - The counter colour to start with
+  Returns:
+    - An infinite sequence of alternating counters"
+  [starts-with]
+  (cycle [starts-with (if (= starts-with :red) :yellow :red)]))
 
-(defn apply-moves [game x-positions start-counter]
+(defn apply-moves
+  "Applies the provided moves in order with alternating counters starting with the provided counter
+  Arguments:
+    - A game
+    - A sequence of x-positions to apply counters to
+    - The counter colour to start with
+  Returns:
+    - An updated game"
+  [game x-positions start-counter]
   (reduce (fn [agg-game new-pos](:board (apply-move agg-game new-pos)))
           game
           (map vector x-positions (next-counter start-counter))))
 
-(defn find-valid-moves [game]
+(defn find-valid-moves
+  "Finds a list of all valid moves on the board
+   Arguments:
+    - A game
+   Returns:
+    - A list of columns which can be placed in"
+  [game]
   (filter (partial is-position-valid? game) (range (get-board-width game)))
   )
 
-(defn print-board [{:keys [width height] :as full-board}]
+(defn get-board-layout 
+  "Translates a game into a 2D collection of the board layout
+   Arguments:
+    - A game
+   Returns:
+    - 2D collection of the board layout"
+  [{:keys [width height] :as full-board}]
   (reverse
     (map
       (fn [y-pos] (map
