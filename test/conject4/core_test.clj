@@ -1,5 +1,5 @@
 (ns conject4.core-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest testing is]]
             [conject4.core :as sut]))
 
 (def test-6x5-empty-game {:width 6 :height 5 :board {} :game-log []})
