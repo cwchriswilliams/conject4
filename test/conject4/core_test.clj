@@ -2,62 +2,60 @@
   (:require [clojure.test :refer [deftest testing is]]
             [conject4.core :as sut]))
 
-(def test-6x5-empty-game {:width 6 :height 5 :board {} :game-log []})
-(def test-6x5-laid-game  {:width 6 :height 5 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow} :game-log []})
-(def test-4x5-laid-game  {:width 4 :height 5 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow} :game-log []})
-(def test-4x3-laid-game  {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red} :game-log []})
-
-(sut/get-board-layout test-4x3-laid-game)
+(def test-6x5-empty-game {::sut/width 6 ::sut/height 5 ::sut/board {} ::sut/game-log []})
+(def test-6x5-laid-game  {::sut/width 6 ::sut/height 5 ::sut/board {0 ::sut/red 2 ::sut/yellow 5 ::sut/red 6 ::sut/yellow 7 ::sut/yellow} ::sut/game-log []})
+(def test-4x5-laid-game  {::sut/width 4 ::sut/height 5 ::sut/board {0 ::sut/red 2 ::sut/yellow 5 ::sut/red 6 ::sut/yellow 7 ::sut/yellow} ::sut/game-log []})
+(def test-4x3-laid-game  {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 4 ::sut/yellow 8 ::sut/red} ::sut/game-log []})
 
 (deftest test-board-creation
   (testing "default game is empty regardless of size"
-    (is (= {:width 1 :height 1 :board {} :game-log []} (sut/create-empty-game 1 1)))
-    (is (= {:width 1 :height 2 :board {} :game-log []} (sut/create-empty-game 1 2)))
-    (is (= {:width 1 :height 3 :board {} :game-log []} (sut/create-empty-game 1 3)))
-    (is (= {:width 2 :height 1 :board {} :game-log []} (sut/create-empty-game 2 1)))
-    (is (= {:width 3 :height 1 :board {} :game-log []} (sut/create-empty-game 3 1)))
-    (is (= {:width 2 :height 2 :board {} :game-log []} (sut/create-empty-game 2 2)))
+    (is (= {::sut/width 1 ::sut/height 1 ::sut/board {} ::sut/game-log []} (sut/create-empty-game 1 1)))
+    (is (= {::sut/width 1 ::sut/height 2 ::sut/board {} ::sut/game-log []} (sut/create-empty-game 1 2)))
+    (is (= {::sut/width 1 ::sut/height 3 ::sut/board {} ::sut/game-log []} (sut/create-empty-game 1 3)))
+    (is (= {::sut/width 2 ::sut/height 1 ::sut/board {} ::sut/game-log []} (sut/create-empty-game 2 1)))
+    (is (= {::sut/width 3 ::sut/height 1 ::sut/board {} ::sut/game-log []} (sut/create-empty-game 3 1)))
+    (is (= {::sut/width 2 ::sut/height 2 ::sut/board {} ::sut/game-log []} (sut/create-empty-game 2 2)))
   )
   )
 
 (deftest test-get-board-layout
   (testing "Prints board as expected"
-    (is (= [[:empty :empty :empty :empty]
-            [:empty :empty :empty :empty]] (sut/get-board-layout {:height 2 :width 4 :board {}})))
-    (is (= [[:empty :red :yellow :yellow]
-            [:red :empty :yellow :empty]] (sut/get-board-layout {:height 2 :width 4 :board {0 :red 2 :yellow 5 :red 6 :yellow 7 :yellow}})))
+    (is (= [[::sut/empty ::sut/empty ::sut/empty ::sut/empty]
+            [::sut/empty ::sut/empty ::sut/empty ::sut/empty]] (sut/get-board-layout {::sut/height 2 ::sut/width 4 ::sut/board {}})))
+    (is (= [[::sut/empty ::sut/red ::sut/yellow ::sut/yellow]
+            [::sut/red ::sut/empty ::sut/yellow ::sut/empty]] (sut/get-board-layout {::sut/height 2 ::sut/width 4 ::sut/board {0 ::sut/red 2 ::sut/yellow 5 ::sut/red 6 ::sut/yellow 7 ::sut/yellow}})))
   )
 )
 
 (deftest test-get-piece-in-position
   (testing "returns empty if space is empty"
-    (is (= :empty (sut/get-piece-in-position test-6x5-empty-game 2 2)))
-    (is (= :empty (sut/get-piece-in-position test-6x5-laid-game 1 2)))
-    (is (= :empty (sut/get-piece-in-position test-6x5-laid-game 2 2)))
-    (is (= :empty (sut/get-piece-in-position test-6x5-laid-game 1 0)))
+    (is (= ::sut/empty (sut/get-piece-in-position test-6x5-empty-game 2 2)))
+    (is (= ::sut/empty (sut/get-piece-in-position test-6x5-laid-game 1 2)))
+    (is (= ::sut/empty (sut/get-piece-in-position test-6x5-laid-game 2 2)))
+    (is (= ::sut/empty (sut/get-piece-in-position test-6x5-laid-game 1 0)))
   )
   (testing "returns correct contents of space if space is not empty"
-    (is (= :red (sut/get-piece-in-position test-6x5-laid-game 0 0)))
-    (is (= :yellow (sut/get-piece-in-position test-6x5-laid-game 2 0)))
-    (is (= :red (sut/get-piece-in-position test-6x5-laid-game 5 0)))
-    (is (= :yellow (sut/get-piece-in-position test-6x5-laid-game 0 1)))
-    (is (= :yellow (sut/get-piece-in-position test-6x5-laid-game 1 1)))
-    (is (= :yellow (sut/get-piece-in-position test-4x5-laid-game 3 1)))
+    (is (= ::sut/red (sut/get-piece-in-position test-6x5-laid-game 0 0)))
+    (is (= ::sut/yellow (sut/get-piece-in-position test-6x5-laid-game 2 0)))
+    (is (= ::sut/red (sut/get-piece-in-position test-6x5-laid-game 5 0)))
+    (is (= ::sut/yellow (sut/get-piece-in-position test-6x5-laid-game 0 1)))
+    (is (= ::sut/yellow (sut/get-piece-in-position test-6x5-laid-game 1 1)))
+    (is (= ::sut/yellow (sut/get-piece-in-position test-4x5-laid-game 3 1)))
   )
   )
 
 
 (deftest test-is-piece-in-position
   (testing "returns true if expected piece in position"
-    (is (true? (sut/is-piece-in-position? test-6x5-laid-game 0 0 :red)))
-    (is (true? (sut/is-piece-in-position? test-6x5-laid-game 2 0 :yellow)))
-    (is (true? (sut/is-piece-in-position? test-4x5-laid-game 3 1 :yellow)))
-    (is (true? (sut/is-piece-in-position? test-4x5-laid-game 0 1 :empty)))
+    (is (true? (sut/is-piece-in-position? test-6x5-laid-game 0 0 ::sut/red)))
+    (is (true? (sut/is-piece-in-position? test-6x5-laid-game 2 0 ::sut/yellow)))
+    (is (true? (sut/is-piece-in-position? test-4x5-laid-game 3 1 ::sut/yellow)))
+    (is (true? (sut/is-piece-in-position? test-4x5-laid-game 0 1 ::sut/empty)))
   )
   (testing "returns false if expected piece not in position"
-    (is (false? (sut/is-piece-in-position? test-6x5-laid-game 0 0 :empty)))
-    (is (false? (sut/is-piece-in-position? test-6x5-laid-game 2 0 :red)))
-    (is (false? (sut/is-piece-in-position? test-4x5-laid-game 0 1 :yellow)))
+    (is (false? (sut/is-piece-in-position? test-6x5-laid-game 0 0 ::sut/empty)))
+    (is (false? (sut/is-piece-in-position? test-6x5-laid-game 2 0 ::sut/red)))
+    (is (false? (sut/is-piece-in-position? test-4x5-laid-game 0 1 ::sut/yellow)))
   )
   )
 
@@ -106,37 +104,37 @@
 
 (deftest test-update-move-list
   (testing "Adds new move to empty game log"
-    (is (= [1] (:game-log (sut/update-move-list {} 1))))
-    (is (= [3] (:game-log (sut/update-move-list {} 3))))
+    (is (= [1] (::sut/game-log (sut/update-move-list {} 1))))
+    (is (= [3] (::sut/game-log (sut/update-move-list {} 3))))
     )
   (testing "Adds new move to non-empty game log"
-    (is (= [1 2] (:game-log (sut/update-move-list {:game-log [1]} 2))))
-    (is (= [3 4] (:game-log (sut/update-move-list {:game-log [3]} 4))))
-    (is (= [3 4 5 6] (:game-log (sut/update-move-list {:game-log [3 4 5]} 6))))
+    (is (= [1 2] (::sut/game-log (sut/update-move-list {::sut/game-log [1]} 2))))
+    (is (= [3 4] (::sut/game-log (sut/update-move-list {::sut/game-log [3]} 4))))
+    (is (= [3 4 5 6] (::sut/game-log (sut/update-move-list {::sut/game-log [3 4 5]} 6))))
     )
   (testing "Adds new move to non-empty game log when position duplicated"
-    (is (= [1 1] (:game-log (sut/update-move-list {:game-log [1]} 1))))
-    (is (= [3 3] (:game-log (sut/update-move-list {:game-log [3]} 3))))
+    (is (= [1 1] (::sut/game-log (sut/update-move-list {::sut/game-log [1]} 1))))
+    (is (= [3 3] (::sut/game-log (sut/update-move-list {::sut/game-log [3]} 3))))
     )
     )
 
 (deftest test-place-counter
   (testing "Places in the location specified on empty board"
-    (is (= {:width 6 :height 5 :board {0 :red} :game-log []} (sut/place-counter test-6x5-empty-game 0 0 :red)))
-    (is (= {:width 6 :height 5 :board {1 :yellow} :game-log []} (sut/place-counter test-6x5-empty-game 1 0 :yellow)))
-    (is (= {:width 6 :height 5 :board {6 :yellow} :game-log []} (sut/place-counter test-6x5-empty-game 0 1 :yellow)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {0 ::sut/red} ::sut/game-log []} (sut/place-counter test-6x5-empty-game 0 0 ::sut/red)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {1 ::sut/yellow} ::sut/game-log []} (sut/place-counter test-6x5-empty-game 1 0 ::sut/yellow)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {6 ::sut/yellow} ::sut/game-log []} (sut/place-counter test-6x5-empty-game 0 1 ::sut/yellow)))
   )
   (testing "Places in the location specified on non-empty board"
-    (is (= {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red 5 :yellow} :game-log []} (sut/place-counter test-4x3-laid-game 1 1 :yellow)))
-    (is (= {:width 4 :height 3 :board {0 :red 4 :yellow 8 :red 6 :yellow} :game-log []} (sut/place-counter test-4x3-laid-game 2 1 :yellow)))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 4 ::sut/yellow 8 ::sut/red 5 ::sut/yellow} ::sut/game-log []} (sut/place-counter test-4x3-laid-game 1 1 ::sut/yellow)))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 4 ::sut/yellow 8 ::sut/red 6 ::sut/yellow} ::sut/game-log []} (sut/place-counter test-4x3-laid-game 2 1 ::sut/yellow)))
   )
   (testing "Replaces the piece in position"
-    (is (= {:width 4 :height 3 :board {0 :yellow 4 :yellow 8 :red} :game-log []} (sut/place-counter test-4x3-laid-game 0 0 :yellow)))
-    (is (= {:width 4 :height 3 :board {0 :red 4 :red 8 :red} :game-log []} (sut/place-counter test-4x3-laid-game 4 0 :red)))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/yellow 4 ::sut/yellow 8 ::sut/red} ::sut/game-log []} (sut/place-counter test-4x3-laid-game 0 0 ::sut/yellow)))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 4 ::sut/red 8 ::sut/red} ::sut/game-log []} (sut/place-counter test-4x3-laid-game 4 0 ::sut/red)))
   )
   (testing "Removes the piece if empty selected"
-    (is (= {:width 4 :height 3 :board {4 :yellow 8 :red} :game-log []} (sut/place-counter test-4x3-laid-game 0 0 :empty)))
-    (is (= {:width 4 :height 3 :board {0 :red 8 :red} :game-log []} (sut/place-counter test-4x3-laid-game 4 0 :empty)))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {4 ::sut/yellow 8 ::sut/red} ::sut/game-log []} (sut/place-counter test-4x3-laid-game 0 0 ::sut/empty)))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 8 ::sut/red} ::sut/game-log []} (sut/place-counter test-4x3-laid-game 4 0 ::sut/empty)))
   )
   )
 
@@ -148,79 +146,79 @@
     ;(is (thrown? Exception (sut/get-lowest-empty-in-column test-4x3-laid-game 1)))
   )
   (testing "Returns expected value for various columns"
-    (is (= 1 (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red}} 0)))
-    (is (= 2 (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow}} 0)))
-    (is (= 3 (sut/get-lowest-empty-in-column {:width 1 :height 5 :board {0 :red 1 :yellow 2 :red}} 0)))
+    (is (= 1 (sut/get-lowest-empty-in-column {::sut/width 1 ::sut/height 5 ::sut/board {0 ::sut/red}} 0)))
+    (is (= 2 (sut/get-lowest-empty-in-column {::sut/width 1 ::sut/height 5 ::sut/board {0 ::sut/red 1 ::sut/yellow}} 0)))
+    (is (= 3 (sut/get-lowest-empty-in-column {::sut/width 1 ::sut/height 5 ::sut/board {0 ::sut/red 1 ::sut/yellow 2 ::sut/red}} 0)))
   )
   )
 
 (deftest test-apply-move
   (testing "apply-move returns map with is-valid set to false if move is not valid"
-    (is (false? (:is-valid-move? (sut/apply-move test-4x3-laid-game -1 :red))))
+    (is (false? (::sut/is-valid-move? (sut/apply-move test-4x3-laid-game -1 ::sut/red))))
   )
   (testing "apply-move returns map with board set to input board if move is not valid"
-    (is (= test-4x3-laid-game (:board (sut/apply-move test-4x3-laid-game -1 :red))))
+    (is (= test-4x3-laid-game (::sut/board (sut/apply-move test-4x3-laid-game -1 ::sut/red))))
   )
   (testing "apply-move returns map with is-valid set to true if move is valid"
-    (is (true? (:is-valid-move? (sut/apply-move test-4x3-laid-game 1 :red))))
+    (is (true? (::sut/is-valid-move? (sut/apply-move test-4x3-laid-game 1 ::sut/red))))
   )
   (testing "apply move returns map with board set to the updated board if move is valid"
-    (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red} :game-log [1]} (:board (sut/apply-move test-4x3-laid-game 1 :red))))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 1 ::sut/red 4 ::sut/yellow 8 ::sut/red} ::sut/game-log [1]} (::sut/board (sut/apply-move test-4x3-laid-game 1 ::sut/red))))
   )
   (testing "apply move can take pair of position and colour"
-    (is (= {:width 4 :height 3 :board {0 :red 1 :red 4 :yellow 8 :red} :game-log [1]} (:board (sut/apply-move test-4x3-laid-game [1 :red]))))
+    (is (= {::sut/width 4 ::sut/height 3 ::sut/board {0 ::sut/red 1 ::sut/red 4 ::sut/yellow 8 ::sut/red} ::sut/game-log [1]} (::sut/board (sut/apply-move test-4x3-laid-game [1 ::sut/red]))))
   )
   )
 
 (deftest test-next-counter
-  (testing "Next counter returns infinite sequence of alternating :red :yellow counters"
-    (is (= [:yellow] (take 1 (sut/next-counter :yellow))))
-    (is (= [:red] (take 1 (sut/next-counter :red))))
-    (is (= [:yellow :red] (take 2 (sut/next-counter :yellow))))
-    (is (= [:red :yellow] (take 2 (sut/next-counter :red))))
-    (is (= [:red :yellow :red :yellow] (take 4 (sut/next-counter :red))))
+  (testing "Next counter returns infinite sequence of alternating ::sut/red ::sut/yellow counters"
+    (is (= [::sut/yellow] (take 1 (sut/next-counter ::sut/yellow))))
+    (is (= [::sut/red] (take 1 (sut/next-counter ::sut/red))))
+    (is (= [::sut/yellow ::sut/red] (take 2 (sut/next-counter ::sut/yellow))))
+    (is (= [::sut/red ::sut/yellow] (take 2 (sut/next-counter ::sut/red))))
+    (is (= [::sut/red ::sut/yellow ::sut/red ::sut/yellow] (take 4 (sut/next-counter ::sut/red))))
   )
   )
 
 (deftest test-apply-moves
   (testing "apply-moves returns input game when no moves provided"
-    (is (= test-4x3-laid-game (sut/apply-moves test-4x3-laid-game [] :yellow)))
+    (is (= test-4x3-laid-game (sut/apply-moves test-4x3-laid-game [] ::sut/yellow)))
   )
   (testing "apply-moves will apply the provided counter first"
-    (is (= {:width 6 :height 5 :board {2 :yellow} :game-log [2]} (sut/apply-moves test-6x5-empty-game [2] :yellow)))
-    (is (= {:width 6 :height 5 :board {2 :red} :game-log [2]} (sut/apply-moves test-6x5-empty-game [2] :red)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {2 ::sut/yellow} ::sut/game-log [2]} (sut/apply-moves test-6x5-empty-game [2] ::sut/yellow)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {2 ::sut/red} ::sut/game-log [2]} (sut/apply-moves test-6x5-empty-game [2] ::sut/red)))
   )
   (testing "apply-moves will apply the moves flipping counter each turn"
-    (is (= {:width 6 :height 5 :board {2 :yellow 3 :red} :game-log [2 3]} (sut/apply-moves test-6x5-empty-game [2 3] :yellow)))
-    (is (= {:width 6 :height 5 :board {2 :red 3 :yellow} :game-log [2 3]} (sut/apply-moves test-6x5-empty-game [2 3] :red)))
-    (is (= {:width 6 :height 5 :board {1 :yellow 2 :red} :game-log [2 1]} (sut/apply-moves test-6x5-empty-game [2 1] :red)))
-    (is (= {:width 6 :height 5 :board {1 :yellow 7 :red} :game-log [1 1]} (sut/apply-moves test-6x5-empty-game [1 1] :yellow)))
-    (is (= {:width 6 :height 5 :board {1 :red 7 :yellow} :game-log [1 1]} (sut/apply-moves test-6x5-empty-game [1 1] :red)))
-    (is (= {:width 6 :height 5 :board {1 :red 7 :yellow 13 :red} :game-log [1 1 1]} (sut/apply-moves test-6x5-empty-game [1 1 1] :red)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {2 ::sut/yellow 3 ::sut/red} ::sut/game-log [2 3]} (sut/apply-moves test-6x5-empty-game [2 3] ::sut/yellow)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {2 ::sut/red 3 ::sut/yellow} ::sut/game-log [2 3]} (sut/apply-moves test-6x5-empty-game [2 3] ::sut/red)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {1 ::sut/yellow 2 ::sut/red} ::sut/game-log [2 1]} (sut/apply-moves test-6x5-empty-game [2 1] ::sut/red)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {1 ::sut/yellow 7 ::sut/red} ::sut/game-log [1 1]} (sut/apply-moves test-6x5-empty-game [1 1] ::sut/yellow)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {1 ::sut/red 7 ::sut/yellow} ::sut/game-log [1 1]} (sut/apply-moves test-6x5-empty-game [1 1] ::sut/red)))
+    (is (= {::sut/width 6 ::sut/height 5 ::sut/board {1 ::sut/red 7 ::sut/yellow 13 ::sut/red} ::sut/game-log [1 1 1]} (sut/apply-moves test-6x5-empty-game [1 1 1] ::sut/red)))
   )
   )
 
 (deftest test-find-valid-moves
   (testing "Returns empty col when there are no valid moves"
-    (is (empty? (sut/find-valid-moves {:width 1 :height 1 :board {0 :red}})))
-    (is (empty? (sut/find-valid-moves {:width 2 :height 1 :board {0 :red 1 :red}})))
-    (is (empty? (sut/find-valid-moves {:width 1 :height 2 :board {0 :red 1 :red}})))
-    (is (empty? (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red 2 :red 3 :red}})))
+    (is (empty? (sut/find-valid-moves {::sut/width 1 ::sut/height 1 ::sut/board {0 ::sut/red}})))
+    (is (empty? (sut/find-valid-moves {::sut/width 2 ::sut/height 1 ::sut/board {0 ::sut/red 1 ::sut/red}})))
+    (is (empty? (sut/find-valid-moves {::sut/width 1 ::sut/height 2 ::sut/board {0 ::sut/red 1 ::sut/red}})))
+    (is (empty? (sut/find-valid-moves {::sut/width 2 ::sut/height 2 ::sut/board {0 ::sut/red 1 ::sut/red 2 ::sut/red 3 ::sut/red}})))
   )
 
   (testing "Returns only valid move if only one move available"
-    (is (= [0] (sut/find-valid-moves {:width 1 :height 1 :board {}})))
-    (is (= [0] (sut/find-valid-moves {:width 2 :height 1 :board {1 :red}})))
-    (is (= [1] (sut/find-valid-moves {:width 2 :height 1 :board {0 :red}})))
-    (is (= [0] (sut/find-valid-moves {:width 1 :height 2 :board {0 :red}})))
-    (is (= [0] (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red 3 :red}})))
-    (is (= [1] (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red 2 :red}})))
+    (is (= [0] (sut/find-valid-moves {::sut/width 1 ::sut/height 1 ::sut/board {}})))
+    (is (= [0] (sut/find-valid-moves {::sut/width 2 ::sut/height 1 ::sut/board {1 ::sut/red}})))
+    (is (= [1] (sut/find-valid-moves {::sut/width 2 ::sut/height 1 ::sut/board {0 ::sut/red}})))
+    (is (= [0] (sut/find-valid-moves {::sut/width 1 ::sut/height 2 ::sut/board {0 ::sut/red}})))
+    (is (= [0] (sut/find-valid-moves {::sut/width 2 ::sut/height 2 ::sut/board {0 ::sut/red 1 ::sut/red 3 ::sut/red}})))
+    (is (= [1] (sut/find-valid-moves {::sut/width 2 ::sut/height 2 ::sut/board {0 ::sut/red 1 ::sut/red 2 ::sut/red}})))
   )
 
   (testing "Returns multiple valid moves if multiple moves available"
-    (is (= [0 1] (sut/find-valid-moves {:width 2 :height 1 :board {}})))
-    (is (= [0 1 2] (sut/find-valid-moves {:width 3 :height 1 :board {}})))
-    (is (= [1 2] (sut/find-valid-moves {:width 3 :height 1 :board {0 :red}})))
-    (is (= [0 1] (sut/find-valid-moves {:width 2 :height 2 :board {0 :red 1 :red}})))
+    (is (= [0 1] (sut/find-valid-moves {::sut/width 2 ::sut/height 1 ::sut/board {}})))
+    (is (= [0 1 2] (sut/find-valid-moves {::sut/width 3 ::sut/height 1 ::sut/board {}})))
+    (is (= [1 2] (sut/find-valid-moves {::sut/width 3 ::sut/height 1 ::sut/board {0 ::sut/red}})))
+    (is (= [0 1] (sut/find-valid-moves {::sut/width 2 ::sut/height 2 ::sut/board {0 ::sut/red 1 ::sut/red}})))
   )
 )

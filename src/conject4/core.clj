@@ -14,7 +14,7 @@
   Returns:
     - A map containing the attributes [width, height board]"
   [x-size y-size]
-  {:height y-size :width x-size :board {} :game-log []})
+  {::height y-size ::width x-size ::board {} ::game-log []})
 
 (defn get-board-height 
   "Gets the height of the provided board
@@ -22,7 +22,7 @@
     - A game
   Returns:
     - An integer representing the height of the board"
-  [{height :height}]
+  [{height ::height}]
   height)
 
 (defn get-board-width 
@@ -31,7 +31,7 @@
     - A game
   Returns:
     - An integer representing the width of the board"
-  [{width :width}]
+  [{width ::width}]
   width)
 
 (defn get-position-index 
@@ -52,9 +52,9 @@
     - A target x position
     - A target y position
   Returns:
-    - A keyword representing the current piece in position. One of [:empty :red :yellow]"
-  [{current-layout :board :as game} x-pos y-pos]
-  (get current-layout (get-position-index game x-pos y-pos) :empty)
+    - A keyword representing the current piece in position. One of [::empty ::red ::yellow]"
+  [{current-layout ::board :as game} x-pos y-pos]
+  (get current-layout (get-position-index game x-pos y-pos) ::empty)
   )
 
 (defn is-piece-in-position?
@@ -63,7 +63,7 @@
     - A game
     - A target x position
     - A target y position
-    - A keyword representing the piece to check for. One of [:empty :red :yellow]
+    - A keyword representing the piece to check for. One of [::empty ::red ::yellow]
   Returns:
     - true or false"
   [game x-pos y-pos piece]
@@ -78,10 +78,10 @@
   Returns:
     - true or false"
   [game x-pos y-pos]
-  (is-piece-in-position? game x-pos y-pos :empty))
+  (is-piece-in-position? game x-pos y-pos ::empty))
 
 (def is-position-filled?
-  "Returns a value indicating whether the provided position is one of [:red :yellow]
+  "Returns a value indicating whether the provided position is one of [::red ::yellow]
   Arguments:
     - A game
     - A target x position
@@ -113,7 +113,7 @@
   Returns:
     - A game with the game log updated with the provided move"
   [game new-column-position]
-  (update game :game-log conj new-column-position))
+  (update game ::game-log conj new-column-position))
 
 (defn place-counter
   "Places the specified counter colour in the specified position (ignoring validating position)
@@ -121,13 +121,13 @@
     - A game
     - A target x position
     - A target y position
-    - A keyword representing the piece to place. One of [:empty :red :yellow]
+    - A keyword representing the piece to place. One of [::empty ::red ::yellow]
   Returns:
-    - A new game with the specified piece placed (or removed for :empty)"
+    - A new game with the specified piece placed (or removed for ::empty)"
   [game x-pos y-pos counter-colour]
-  (if (= counter-colour :empty)
-    (update game :board dissoc (get-position-index game x-pos y-pos))
-    (assoc-in game [:board (get-position-index game x-pos y-pos)] counter-colour))
+  (if (= counter-colour ::empty)
+    (update game ::board dissoc (get-position-index game x-pos y-pos))
+    (assoc-in game [::board (get-position-index game x-pos y-pos)] counter-colour))
   )
 
 (defn get-lowest-empty-in-column
@@ -136,7 +136,7 @@
     - A game
     - A target x column
   Returns:
-    - An integer representing a y-position which is :empty in the specified column"
+    - An integer representing a y-position which is ::empty in the specified column"
   [game x-pos]
   (loop [current-row-index 0]
     (if (is-position-empty? game x-pos current-row-index)
@@ -148,9 +148,9 @@
   Arguments:
     - A game
     - A target x column
-    - A keyword representing the piece to place. One of [:empty :red :yellow]
+    - A keyword representing the piece to place. One of [::empty ::red ::yellow]
   Returns:
-    - A new game board with the specified piece placed (or removed for :empty)"
+    - A new game board with the specified piece placed (or removed for ::empty)"
     [game x-pos counter-colour]
   (-> 
    (place-counter game x-pos (get-lowest-empty-in-column game x-pos) counter-colour)
@@ -162,16 +162,16 @@
   Arguments:
     - A game
     - A target x column
-    - A keyword representing the piece to place. One of [:empty :red :yellow]
+    - A keyword representing the piece to place. One of [::empty ::red ::yellow]
   Arguments:
     - A game
     - A pair of x column and counter-colour  
   Returns:
-    - A new game board with the specified piece placed (or removed for :empty)"
+    - A new game board with the specified piece placed (or removed for ::empty)"
   ([game x-pos counter-colour]
   (if (is-position-valid? game x-pos)
-    {:board (place-counter-in-column game x-pos counter-colour) :is-valid-move? true}
-    {:board game :is-valid-move? false}
+    {::board (place-counter-in-column game x-pos counter-colour) ::is-valid-move? true}
+    {::board game ::is-valid-move? false}
     ))
   ([game [x-pos counter-colour]]
    (apply-move game x-pos counter-colour))
@@ -184,7 +184,7 @@
   Returns:
     - An infinite sequence of alternating counters"
   [starts-with]
-  (cycle [starts-with (if (= starts-with :red) :yellow :red)]))
+  (cycle [starts-with (if (= starts-with ::red) ::yellow ::red)]))
 
 (defn apply-moves
   "Applies the provided moves in order with alternating counters starting with the provided counter
@@ -195,7 +195,7 @@
   Returns:
     - An updated game"
   [game x-positions start-counter]
-  (reduce (fn [agg-game new-pos](:board (apply-move agg-game new-pos)))
+  (reduce (fn [agg-game new-pos](::board (apply-move agg-game new-pos)))
           game
           (map vector x-positions (next-counter start-counter))))
 
@@ -215,7 +215,7 @@
     - A game
    Returns:
     - 2D collection of the board layout"
-  [{:keys [width height] :as full-board}]
+  [{:keys [::width ::height] :as full-board}]
   (reverse
     (map
       (fn [y-pos] (map
