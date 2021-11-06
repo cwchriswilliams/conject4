@@ -16,24 +16,6 @@
   [x-size y-size]
   {::height y-size ::width x-size ::board {} ::game-log []})
 
-(defn get-board-height 
-  "Gets the height of the provided board
-  Arguments:
-    - A game
-  Returns:
-    - An integer representing the height of the board"
-  [{height ::height}]
-  height)
-
-(defn get-board-width 
-"Gets the width of the provided board
-  Arguments:
-    - A game
-  Returns:
-    - An integer representing the width of the board"
-  [{width ::width}]
-  width)
-
 (defn get-position-index 
   "Gets the zero-indexed index of the provided position in the board
   Arguments:
@@ -43,7 +25,7 @@
   Returns:
     - An integer representing the zero-index index of the provided position"
   [game x-pos y-pos]
-  (+ (* y-pos (get-board-width game)) x-pos))
+  (+ (* y-pos (::width game)) x-pos))
 
 (defn get-piece-in-position 
   "Gets the current piece in the provided position in the board
@@ -100,8 +82,8 @@
  [game x-pos]
   (and
     (not (neg? x-pos))
-    (< x-pos (get-board-width game))
-    (is-position-empty? game x-pos (dec (get-board-height game)))
+    (< x-pos (::width game))
+    (is-position-empty? game x-pos (dec (::height game)))
     )
   )
 
@@ -206,7 +188,7 @@
    Returns:
     - A list of columns which can be placed in"
   [game]
-  (filter (partial is-position-valid? game) (range (get-board-width game)))
+  (filter (partial is-position-valid? game) (range (::width game)))
   )
 
 (defn get-board-layout 
