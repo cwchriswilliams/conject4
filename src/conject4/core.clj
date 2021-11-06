@@ -1,10 +1,39 @@
 (ns conject4.core
+  (:require [clojure.spec.alpha :as spec])
   (:gen-class))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  []
-  (println "Hello, World!"))
+(comment
+    (require '[clojure.spec.test.alpha :as stest])
+    (require '[clojure.spec.gen.alpha :as sgen])
+)
+;; specs in this file are for the purpose of experimentation only
+;; Q: Where should these be placed?
+;; Q: How much is too much spec?
+;; Q: How much can the auto-generated spec doc replace documentation of args and rets?
+
+(def valid-player-counters #{::red ::yellow})
+(def valid-counters (conj valid-player-counters ::empty))
+
+(spec/def ::game-size (spec/and pos-int? #(< % 1000)))
+(spec/def ::game-pos ::game-size)
+(spec/def ::board (spec/map-of nat-int? valid-player-counters))
+(spec/def ::game-log vector?)
+(spec/def ::height ::game-size)
+(spec/def ::width ::game-size)
+(spec/def ::game (spec/keys
+                  :req [::height ::width ::board ::game-log]))
+(spec/def ::empty-game (spec/and ::game 
+                                 #(and (empty? (::board %)) (map? (::board %)))
+                                 #(and (empty? (::game-log %)) (vector (::game-log %)))
+                                 ))
+
+
+
+(spec/fdef create-empty-game
+  :args (spec/cat :x-size ::game-size :y-size ::game-size)
+           :fn (spec/and #(= (-> % :args :y-size) (-> % :ret ::height))
+                         #(= (-> % :args :x-size) (-> % :ret ::width)))
+  :ret ::empty-game)
 
 (defn create-empty-game 
   "Creates an empty game of the specified size
@@ -15,6 +44,11 @@
     - A map containing the attributes [width, height board]"
   [x-size y-size]
   {::height y-size ::width x-size ::board {} ::game-log []})
+
+
+(comment
+  (stest/check `create-empty-game)
+  )
 
 (defn get-position-index 
   "Gets the zero-indexed index of the provided position in the board
@@ -27,6 +61,13 @@
   [game x-pos y-pos]
   (+ (* y-pos (::width game)) x-pos))
 
+(spec/fdef get-piece-in-position
+           :args (spec/and (spec/cat :game ::game :x-pos ::game-pos :y-pos ::game-pos)
+                           #(< (:x-pos %) (-> % :game ::width))
+                           #(< (:y-pos %) (-> % :game ::height)))
+           :ret valid-counters
+           )
+
 (defn get-piece-in-position 
   "Gets the current piece in the provided position in the board
   Arguments:
@@ -37,6 +78,10 @@
     - A keyword representing the current piece in position. One of [::empty ::red ::yellow]"
   [{current-layout ::board :as game} x-pos y-pos]
   (get current-layout (get-position-index game x-pos y-pos) ::empty)
+  )
+
+(comment
+  (stest/check `get-piece-in-position)
   )
 
 (defn is-piece-in-position?
